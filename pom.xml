@@ -60,6 +60,16 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>software.crldev</groupId>
+			<artifactId>elrond-spring-boot-starter-reactive</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.77.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
