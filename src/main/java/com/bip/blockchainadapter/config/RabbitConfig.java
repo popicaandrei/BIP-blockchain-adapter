@@ -1,5 +1,6 @@
 package com.bip.blockchainadapter.config;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,12 +16,19 @@ public class RabbitConfig {
 
     @Value("${spring.rabbitmq.host}")
     String host;
-
     @Value("${spring.rabbitmq.username}")
     String username;
-
     @Value("${spring.rabbitmq.password}")
     String password;
+    @Value("${spring.rabbitmq.queue}")
+    private String queue;
+    @Value("${spring.rabbitmq.routingkey}")
+    private String routingKey;
+
+    @Bean
+    Queue queue() {
+        return new Queue(queue, true);
+    }
 
     @Bean
     CachingConnectionFactory connectionFactory() {
