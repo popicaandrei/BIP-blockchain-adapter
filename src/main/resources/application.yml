@@ -1,2 +1,13 @@
 server:
   port : 8082
+  error:
+    include-stacktrace: never
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
+    exchange: event.exchange
+    queue: event.queue
+    routingkey: event.routingkey

@@ -60,6 +60,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mavenlibs.com/maven/dependency/software.crldev/elrond-spring-boot-starter-reactive -->
+		<dependency>
+			<groupId>software.crldev</groupId>
+			<artifactId>elrond-spring-boot-starter-reactive</artifactId>
+			<version>1.1.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
