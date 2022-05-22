@@ -6,7 +6,6 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 public class EventSubscriber implements Subscriber<EventPayload> {
 
     @Autowired
@@ -24,6 +23,7 @@ public class EventSubscriber implements Subscriber<EventPayload> {
     @Override
     public void onNext(EventPayload event) {
         var transHash = elrondService.sendTransaction(event);
+        subscription.request(1);
         // mongo with event and hash
     }
 
