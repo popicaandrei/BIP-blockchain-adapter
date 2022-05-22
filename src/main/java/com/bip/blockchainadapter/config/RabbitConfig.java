@@ -22,8 +22,6 @@ public class RabbitConfig {
     String password;
     @Value("${spring.rabbitmq.queue}")
     private String queue;
-    @Value("${spring.rabbitmq.routingkey}")
-    private String routingKey;
 
     @Bean
     Queue queue() {
