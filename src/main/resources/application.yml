@@ -10,3 +10,8 @@ spring:
     username: guest
     queue: bip.queue
     routingkey: bip.routingkey
+  elrond:
+    client:
+      gateway: devnet
+      readTimeoutMillis: 10000
+      writeTimeoutMillis: 10000
