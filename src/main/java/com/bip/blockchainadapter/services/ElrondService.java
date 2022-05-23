@@ -1,4 +1,4 @@
-package com.bip.blockchainadapter.elrond;
+package com.bip.blockchainadapter.services;
 
 import com.bip.blockchainadapter.models.messaging.EventPayload;
 import com.bip.blockchainadapter.utils.WalletUtil;
@@ -26,13 +26,14 @@ public class ElrondService {
     public Mono<TransactionHash> sendTransaction(EventPayload event) {
         var wallet = createInstitutionWallet();
         var transactionPayload = createTransactionRequest(wallet, event);
-        log.info(transactionPayload.toString());
+
+        log.info("A new transaction payload was created, sending it to {}", transactionPayload.getReceiverAddress());
         var hash = interactor.sendTransaction(wallet, transactionPayload);
-        hash.log().subscribe(s -> System.out.println("Transaction request"));
+        hash.log().subscribe(s -> log.info("Transaction created with hash: {}", s.getHash()));
         return hash;
     }
 
-    private TransactionRequest createTransactionRequest(Wallet wallet, EventPayload event){
+    private TransactionRequest createTransactionRequest(Wallet wallet, EventPayload event) {
         return TransactionRequest.builder()
                 .receiverAddress(Address.fromBech32("erd1hfw4zhllexu4mys02hyj25nu5vuerp8mczhgzuz8ckp74q6muxrs6s2tt0"))
                 .data(PayloadData.fromString("Transaction for event " + event.getEventName()))

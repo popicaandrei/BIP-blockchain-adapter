@@ -26,5 +26,4 @@ public class Invoice {
     private AuthType authType;
     private String identificator;
     private Date eventDate;
-
 }

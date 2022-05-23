@@ -1,7 +1,7 @@
 package com.bip.blockchainadapter.subscribers;
 
-import com.bip.blockchainadapter.elrond.ElrondService;
 import com.bip.blockchainadapter.models.messaging.EventPayload;
+import com.bip.blockchainadapter.services.ElrondService;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
