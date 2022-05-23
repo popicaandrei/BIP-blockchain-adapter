@@ -8,8 +8,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 @Service
 @Slf4j
@@ -31,7 +33,7 @@ public class EmailService {
             helper.addInline("citizens", resource);
 
             emailSender.send(message);
-        } catch (RuntimeException e) {
+        } catch (MessagingException | FileNotFoundException e) {
             e.getMessage();
         }
     }
