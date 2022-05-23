@@ -22,7 +22,7 @@ public class EventService {
 
     @Transactional
     public void handleEvents(EventPayload payload) {
-        log.info("Event is handled, sending it to enrond client");
+        log.info("Event is handled, sending it to Elrond interactor");
 
         elrondService.sendTransaction(payload)
                 .doOnError(throwable -> {

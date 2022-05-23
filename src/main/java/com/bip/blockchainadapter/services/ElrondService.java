@@ -27,15 +27,15 @@ public class ElrondService {
         var wallet = createInstitutionWallet();
         var transactionPayload = createTransactionRequest(wallet, event);
 
-        log.info("A new transaction payload was created, sending it to {}", transactionPayload.getReceiverAddress());
+        log.info("A new transaction payload was created, sending it to {}", transactionPayload.getReceiverAddress().getBech32());
         var hash = interactor.sendTransaction(wallet, transactionPayload);
-        hash.log().subscribe(s -> log.info("Transaction created with hash: {}", s.getHash()));
+        hash.subscribe(s -> log.info("Transaction created with hash: {}", s.getHash()));
         return hash;
     }
 
     private TransactionRequest createTransactionRequest(Wallet wallet, EventPayload event) {
         return TransactionRequest.builder()
-                .receiverAddress(Address.fromBech32("erd1hfw4zhllexu4mys02hyj25nu5vuerp8mczhgzuz8ckp74q6muxrs6s2tt0"))
+                .receiverAddress(Address.fromBech32(event.getUser().getWalletAddress()))
                 .data(PayloadData.fromString("Transaction for event " + event.getEventName()))
                 .value(Balance.fromEgld(event.getReward()))
                 .build();
