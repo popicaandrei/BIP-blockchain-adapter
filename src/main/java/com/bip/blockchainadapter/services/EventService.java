@@ -4,11 +4,12 @@ import com.bip.blockchainadapter.config.exceptions.BusinessException;
 import com.bip.blockchainadapter.models.entities.Invoice;
 import com.bip.blockchainadapter.models.messaging.EventPayload;
 import com.bip.blockchainadapter.repositories.InvoiceRepository;
+import com.bip.blockchainadapter.utils.converters.InvoiceConvertor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
+import software.crldev.elrondspringbootstarterreactive.api.model.TransactionHash;
 
 @Service
 @Slf4j
@@ -27,10 +28,12 @@ public class EventService {
                 .doOnError(throwable -> {
                     throw new BusinessException("Error appeared when sending transaction");
                 })
-                .subscribe(s -> createInvoice());
+                .subscribe(hash -> createInvoice(payload, hash));
     }
 
-    private Mono<Invoice> createInvoice() {
-        return null;
+    private void createInvoice(EventPayload event, TransactionHash hash) {
+        Invoice invoice = InvoiceConvertor.convertEventToInvoice(event);
+        invoice.setTransactionIdentifier(hash.getHash());
+        invoiceRepository.save(invoice).subscribe(i -> log.info("New invoice is being saved in database {}", i));
     }
 }

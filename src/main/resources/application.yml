@@ -5,12 +5,12 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://<username>:<pwd>@<cluster>.mongodb.net/mygrocerylist
       database: bip
       port: 27017
       host: localhost
       username: admin
       password: password
+      authentication-database: admin
   rabbitmq:
     host: localhost
     port: 5672
