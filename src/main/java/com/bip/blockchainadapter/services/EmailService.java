@@ -49,7 +49,7 @@ public class EmailService {
         return "<b>Dear citizen</b>," +
                 "<br>" +
                 "<br><b>Here is the invoice for your event: " + invoice.getEvent() + "</b>" +
-                "<br><b>Reward received: </b>" + invoice.getReward() +
+                "<br><b>Reward received: </b>" + invoice.getReward() + " EGLD" +
                 "<br><b>Authentication identifier: </b>" + invoice.getIdentificator() +
                 "<br><b>Transaction identifier: </b>" + invoice.getTransactionIdentifier() +
                 "<br><b> Wallet identifier: </b>" + invoice.getInvoiceData().getWalletAddress() +
@@ -61,7 +61,7 @@ public class EmailService {
     }
 
     private String dateFormatter(Date date) {
-        DateFormat inputFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SS");
+        DateFormat inputFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         return inputFormatter.format(date);
     }
 }
