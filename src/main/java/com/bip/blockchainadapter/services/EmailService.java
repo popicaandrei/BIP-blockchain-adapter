@@ -1,10 +1,16 @@
 package com.bip.blockchainadapter.services;
 
+import com.bip.blockchainadapter.models.entities.Invoice;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -12,99 +18,50 @@ public class EmailService {
     private static final String HOST = "smtp.gmail.com";
     private static final int PORT = 465;
     private static final boolean SSL_FLAG = true;
+    private final String EMAIL_USERNAME = "andrei.dummy1234@gmail.com";
+    private final String EMAIL_PASSWORD = "0Pass2468&";
 
+    public void sendInvoice(Invoice invoice) {
 
-    public void sendSimpleEmail() {
-        String userName = "andrei.dummy1234@gmail.com";
-        String password = "0Pass2468&";
-
-        String fromAddress = "andrei.dummy1234@gmail.com";
-        String toAddress = "popica.andreivlad@gmail.com";
-        String subject = "Test Mail";
-        String message = "Hello from Apache Mail";
-
+        log.info("Sending new email for invoice with number {}", invoice.getId());
         try {
-            Email email = new SimpleEmail();
+            HtmlEmail email = new HtmlEmail();
+            StringBuffer msg = new StringBuffer();
             email.setHostName(HOST);
             email.setSmtpPort(PORT);
-            email.setAuthenticator(new DefaultAuthenticator(userName, password));
+            email.setAuthenticator(new DefaultAuthenticator(EMAIL_USERNAME, EMAIL_PASSWORD));
             email.setSSLOnConnect(SSL_FLAG);
-            email.setFrom(fromAddress);
-            email.setSubject(subject);
-            email.setMsg(message);
-            email.addTo(toAddress);
+            email.setFrom(EMAIL_USERNAME);
+            email.setSubject("Invoice for Event " + invoice.getEvent());
+
+            File citizensPicture = ResourceUtils.getFile("classpath:static/citizens.png");
+            msg.append("<img src=cid:").append(email.embed(citizensPicture)).append(">");
+            email.setHtmlMsg(createMailContent(invoice, String.valueOf(msg)));
+
+            email.addTo(invoice.getInvoiceData().getEmail());
             email.send();
         } catch (Exception ex) {
-            System.out.println("Unable to send email");
-            System.out.println(ex);
+            log.error("Unable to send email, exception: {}", ex.getMessage());
         }
     }
 
+    public String createMailContent(Invoice invoice, String picture) {
+        return "<b>Dear citizen</b>," +
+                "<br>" +
+                "<br><b>Here is the invoice for your event: " + invoice.getEvent() + "</b>" +
+                "<br><b>Reward received: </b>" + invoice.getReward() +
+                "<br><b>Authentication identifier: </b>" + invoice.getIdentificator() +
+                "<br><b>Transaction identifier: </b>" + invoice.getTransactionIdentifier() +
+                "<br><b> Wallet identifier: </b>" + invoice.getInvoiceData().getWalletAddress() +
+                "<br><b>Institution: </b>" + invoice.getInstitution() +
+                "<br><b> Event date: </b>" + dateFormatter(invoice.getEventDate()) +
+                "<br>" +
+                "<br><b>Thank you for being part of " + invoice.getInstitution() + "'s life</b>" +
+                "<br>" + picture;
+    }
 
-
-
-
-//    @Autowired
-//    private JavaMailSender emailSender;
-//
-//    private final Session emailSession;
-//    private final String EMAIL_USERNAME = "andrei.dummy1234@gmail.com";
-//    private final String EMAIL_PASSWORD = "0Pass2468&";
-//
-//    public EmailService() {
-//        //email setup
-//        Properties props = new Properties();
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.host", "smtp.gmail.com");
-//        props.put("mail.smtp.port", "587");
-//
-//        this.emailSession = Session.getInstance(props,
-//                new javax.mail.Authenticator() {
-//                    protected PasswordAuthentication getPasswordAuthentication() {
-//                        return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
-//                    }
-//                });
-//    }
-//
-//    public void sendInvoice(Invoice invoice) {
-//        try {
-//            MimeMessage message = new MimeMessage(this.emailSession);
-//
-//            message.setFrom(new InternetAddress(EMAIL_USERNAME));
-//            message.setRecipients(Message.RecipientType.TO,
-//                    InternetAddress.parse("popica.andreivlad@gmail.com"));
-//            message.setSubject("ceva");
-//
-////            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-////            helper.setSubject("Invoice for Event " + invoice.getEvent());
-////            helper.setFrom("andrei.dummy1234@gmail.com");
-////            helper.setTo("popica.andreivlad@gmail.com");
-////
-////            helper.setText(createMailContent(invoice), true);
-////            File resource = ResourceUtils.getFile("classpath:static/citizens.png");
-////            helper.addInline("citizens", resource);
-//
-//            Transport.send(message);
-//        } catch (MessagingException e) {
-//            e.getMessage();
-//        }
-//    }
-//
-//    public String createMailContent(Invoice invoice) {
-//        return "<b>Dear citizen</b>," +
-//                "<br><b>Here is the invoice for the event: " + invoice.getEvent() + "</b>" +
-//                "<br>" +
-//                "<br><img src='cid:image001'/><br><b>Best Regards" +
-//                "<br> Reward received: " + invoice.getReward() +
-//                "<br> Authenticated via: " + invoice.getAuthType().name() +
-//                "<br> Authentication identifier: " + invoice.getAuthType().name() +
-//                "<br> Transaction identifier: " + invoice.getTransactionIdentifier() +
-//                "<br> Wallet identifier: " + invoice.getInvoiceData().getWalletAddress() +
-//                "<br> Institution: " + invoice.getInstitution() +
-//                "<br> Event date: " + invoice.getEventDate() +
-//                "<br> <img src='cid:citizens'/>" +
-//                "<br><b>Thank you for being part of " + invoice.getInstitution() + "'s life</b>";
-//    }
-
+    private String dateFormatter(Date date) {
+        DateFormat inputFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SS");
+        return inputFormatter.format(date);
+    }
 }

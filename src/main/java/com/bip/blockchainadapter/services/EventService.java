@@ -36,11 +36,10 @@ public class EventService {
         Invoice invoice = InvoiceConvertor.convertEventToInvoice(event);
         invoice.setTransactionIdentifier(hash.getHash());
         log.info("New invoice is being saved in database {}", invoice);
-        emailService.sendSimpleEmail();
-//        invoiceRepository.save(invoice)
-//                .doOnError(throwable -> {
-//                    throw new BusinessException("Error appeared when saving invoice");
-//                }).
-//                subscribe(i -> emailService.sendInvoice(i));
+        invoiceRepository.save(invoice)
+                .doOnError(throwable -> {
+                    throw new BusinessException("Error appeared when saving invoice");
+                }).
+                subscribe(i -> emailService.sendInvoice(i));
     }
 }
