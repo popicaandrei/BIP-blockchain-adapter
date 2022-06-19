@@ -18,8 +18,8 @@ public class EmailService {
     private static final String HOST = "smtp.gmail.com";
     private static final int PORT = 465;
     private static final boolean SSL_FLAG = true;
-    private final String EMAIL_USERNAME = "andrei.dummy1234@gmail.com";
-    private final String EMAIL_PASSWORD = "0Pass2468&";
+    private final String EMAIL_USERNAME = "";
+    private final String EMAIL_PASSWORD = "";
 
     public void sendInvoice(Invoice invoice) {
 
