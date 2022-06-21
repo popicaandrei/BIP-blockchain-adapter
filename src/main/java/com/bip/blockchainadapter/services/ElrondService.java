@@ -25,7 +25,7 @@ public class ElrondService {
 
     public Mono<TransactionHash> sendTransaction(EventPayload event) {
         var wallet = createInstitutionWallet();
-        var transactionPayload = createTransactionRequest(wallet, event);
+        var transactionPayload = createTransactionRequest(event);
 
         log.info("A new transaction payload was created, sending it to {}", transactionPayload.getReceiverAddress().getBech32());
         var hash = interactor.sendTransaction(wallet, transactionPayload);
@@ -33,7 +33,7 @@ public class ElrondService {
         return hash;
     }
 
-    private TransactionRequest createTransactionRequest(Wallet wallet, EventPayload event) {
+    private TransactionRequest createTransactionRequest(EventPayload event) {
         return TransactionRequest.builder()
                 .receiverAddress(Address.fromBech32(event.getUser().getWalletAddress()))
                 .data(PayloadData.fromString("Transaction for event " + event.getEventName()))
